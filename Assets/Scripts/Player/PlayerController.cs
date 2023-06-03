@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour {
         // Arduino port initialization
         try {
             joystick.Open();
-            joystick.ReadTimeout = 1;
+            joystick.ReadTimeout = 16;
             Debug.Log("Joystick Connection Open");
 
             // balanceBall.Open();
@@ -48,61 +48,33 @@ public class PlayerController : MonoBehaviour {
     
     void Update() {
         if (isOnBoard) {
-            // /*
-            //  * ARDUINO MODE
-            //  */
-            // if (joystick.IsOpen) {
-            //     int threshold = 200;
-            //     int readVal;
-            //     try {
-            //         readVal = int.Parse(joystick.ReadLine());
-            //         readVal = (readVal > 1023) ? 515 : readVal;
-            //     } catch { // Catch TimeoutException, Parse Exception
-            //         readVal = 515;
-            //     }
-                
-            //     if (timePassed > 0.1f) {
-            //         if (readVal > 515 + threshold) ChangeLane(1);
-            //         else if (readVal < 515 - threshold) ChangeLane(-1);
-
-            //         timePassed = 0;
-            //     }
-            // }
-
-            // /*
-            //  * KEYBOARD MODE
-            //  */
-            // else {
-            //     if (timePassed > 0.2f) {
-            //         if (Input.GetAxisRaw("Horizontal") < 0) ChangeLane(-1);
-            //         else if (Input.GetAxisRaw("Horizontal") > 0) ChangeLane(1);
-
-            //         timePassed = 0;
-            //     }
-            // }
-            int directionVal;
-            try { // Timeout exception
+            /*
+             * ARDUINO MODE
+             */
+            if (joystick.IsOpen) {
+                joystick.Write("c");
                 string readVal = joystick.ReadLine();
-                directionVal = int.Parse(readVal);
-            } catch {
-                directionVal = 515;
-            }
-            
-            if (timePassed > 0.2f) {
-                if (joystick.IsOpen) { // Joystick
-                    if (directionVal > 515) {
-                        ChangeLane(1);
-                    } else if (directionVal < 515) {
-                        ChangeLane(-1);
-                    }
-                } else { // Keyboard
-                    if (Input.GetAxisRaw("Horizontal") < 0) {
-                        ChangeLane(-1);
-                    } else if (Input.GetAxisRaw("Horizontal") > 0) {
-                        ChangeLane(1);
-                    }
+                int inputVal;
+                if (readVal.Length > 0 && timePassed > 0.2f) {
+                    inputVal = int.Parse(readVal);
+
+                    if (inputVal > 712) ChangeLane(1);
+                    else if (inputVal < 312) ChangeLane(-1);
+
+                    timePassed = 0;
                 }
-                timePassed = 0;
+            }
+
+            /*
+             * KEYBOARD MODE
+             */
+            else {
+                if (timePassed > 0.2f) {
+                    if (Input.GetAxisRaw("Horizontal") < 0) ChangeLane(-1);
+                    else if (Input.GetAxisRaw("Horizontal") > 0) ChangeLane(1);
+
+                    timePassed = 0;
+                }
             }
             
             // Forward move permitted from GameManager states
@@ -115,7 +87,7 @@ public class PlayerController : MonoBehaviour {
             transform.rotation = Quaternion.Euler(0, 0, 0);
             timePassed += Time.deltaTime;
         } else {
-            Debug.Log("Get on the board!");
+            // TBA: 보드에서 떨어질 시 실행할 내용
         }
     }
 
