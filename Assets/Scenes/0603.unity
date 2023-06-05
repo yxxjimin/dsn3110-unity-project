@@ -9825,7 +9825,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isFinished: 0
   gameManager: {fileID: 1121100567}
-  endTimer: 10
+  endTimer: 100
 --- !u!1 &277990061
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,7 +14,7 @@ public class InfiniteRunState : State {
     public override void Enter() {
         playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         playerScript.movePermitted = false;
-        playerScript.isReversed = true;
+        playerScript.isReversed = false;
         isFinished = false;
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();

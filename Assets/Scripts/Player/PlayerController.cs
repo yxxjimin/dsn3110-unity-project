@@ -27,12 +27,13 @@ public class PlayerController : MonoBehaviour {
     void OnEnable() {
         // Arduino port initialization
         try {
-            joystick.Open();
-            joystick.ReadTimeout = 16;
-            Debug.Log("Joystick Connection Open");
+            // joystick.Open();
+            // joystick.ReadTimeout = 16;
+            // Debug.Log("Joystick Connection Open");
 
-            // balanceBall.Open();
-            // Debug.Log("Balance Ball Connection Open");
+            balanceBall.Open();
+            balanceBall.ReadTimeout = 16;
+            Debug.Log("Balance Ball Connection Open");
         } 
         catch {
             Debug.Log("Connection Failed");
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour {
              * ARDUINO MODE
              */
             if (joystick.IsOpen) {
-                joystick.Write("c");
+                joystick.Write("1");
                 string readVal = joystick.ReadLine();
                 int inputVal;
                 if (readVal.Length > 0 && timePassed > 0.2f) {
@@ -95,7 +96,7 @@ public class PlayerController : MonoBehaviour {
 
     void OnDisable() {
         joystick.Close();
-        // balanceBall.Close();
+        balanceBall.Close();
     }
 
     void OnTriggerEnter(Collider item) {
@@ -118,19 +119,23 @@ public class PlayerController : MonoBehaviour {
     }
 
     bool IsOnBoard() {
-        // balanceBall.Write("c");
-        // int velostatVal = balanceBall.ReadByte();
-        
-        // if (velostatVal == 0) timeOffBoard += Time.deltaTime;
-        // else timeOffBoard = 0f;
+        balanceBall.Write("c");
+        string readVal = balanceBall.ReadLine();
+        if (readVal.Length > 0) {
+            int velostatVal = int.Parse(readVal);
+            if (velostatVal < 700) timeOffBoard += Time.deltaTime;
+            else timeOffBoard = 0f;
+        }
 
-        // if (timeOffBoard > 0.5f) return false;
+        if (timeOffBoard > 0.3f) return false;
+        return true;
 
         // Debug
-        if (Input.GetButton("Jump")) timeOffBoard += Time.deltaTime;
-        else timeOffBoard = 0;
 
-        if (timeOffBoard > 0.5f) return false;
-        return true;
+        // if (Input.GetButton("Jump")) timeOffBoard += Time.deltaTime;
+        // else timeOffBoard = 0;
+
+        // if (timeOffBoard > 0.5f) return false;
+        // return true;
     }
 }
