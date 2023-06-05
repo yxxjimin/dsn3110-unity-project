@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FirstStageState : State {
+public class SecondStageState : State {
     private PlayerController playerScript;
     public GameManager gameManager;
 
     // Temporary start trigger
     private float startTimer = 3f;
-    private float endTimer = 6f;
+    private float endTimer = 30f;
 
     public override void Enter() {
         playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         playerScript.movePermitted = false;
+        playerScript.isReversed = true;
         isFinished = false;
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -22,11 +23,17 @@ public class FirstStageState : State {
     }
 
     public override void Tick() {
-        if (startTimer > 0) startTimer -= Time.deltaTime;
-        else playerScript.movePermitted = true;
+        if (startTimer > 0) {
+            startTimer -= Time.deltaTime;
+        } else {
+            playerScript.movePermitted = true;
+        }
 
-        if (endTimer > 0) endTimer -= Time.deltaTime;
-        else Exit();
+        if (endTimer > 0) {
+            endTimer -= Time.deltaTime;
+        } else {
+            Exit();
+        }
     }
 
     public override void Exit() {

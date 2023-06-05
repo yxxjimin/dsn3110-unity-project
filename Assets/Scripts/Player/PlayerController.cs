@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour {
 
     // Player item info
     private GameManager gameManager;
+    public bool isReversed;
     
     void OnEnable() {
         // Arduino port initialization
@@ -57,9 +58,9 @@ public class PlayerController : MonoBehaviour {
                 if (readVal.Length > 0 && timePassed > 0.2f) {
                     inputVal = int.Parse(readVal);
 
-                    if (inputVal > 712) ChangeLane(1);
-                    else if (inputVal < 312) ChangeLane(-1);
-
+                    if ((inputVal > 712 && !isReversed) || (inputVal < 312 && isReversed)) ChangeLane(1);
+                    else if ((inputVal < 312 && !isReversed) || (inputVal > 712 && isReversed)) ChangeLane(-1);
+                    
                     timePassed = 0;
                 }
             }
@@ -69,8 +70,8 @@ public class PlayerController : MonoBehaviour {
              */
             else {
                 if (timePassed > 0.2f) {
-                    if (Input.GetAxisRaw("Horizontal") < 0) ChangeLane(-1);
-                    else if (Input.GetAxisRaw("Horizontal") > 0) ChangeLane(1);
+                    if ((Input.GetAxisRaw("Horizontal") < 0 && !isReversed) || (Input.GetAxisRaw("Horizontal") > 0 && isReversed)) ChangeLane(-1);
+                    else if ((Input.GetAxisRaw("Horizontal") > 0 && !isReversed) || (Input.GetAxisRaw("Horizontal") < 0 && isReversed)) ChangeLane(1);
 
                     timePassed = 0;
                 }

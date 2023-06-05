@@ -3,17 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    private State currentState;
     public GameObject player;
     public GameObject mapGen;
-    public State[] states;
+    private Queue<State> stateList;
+    [SerializeField]
+    private State tutorialStage, firstStage, secondStage;
+    private State currentState;
 
-    private int i = 0;
     public Dictionary<string, int> itemInfo;
 
     void Start() {
-        currentState = states[i];
         itemInfo = new Dictionary<string, int>();
+
+        stateList = new Queue<State>();
+        stateList.Enqueue(tutorialStage);
+        stateList.Enqueue(firstStage);
+        stateList.Enqueue(secondStage);
+
+        currentState = stateList.Peek();
         currentState.Enter();
     }
 
@@ -21,7 +28,8 @@ public class GameManager : MonoBehaviour {
         currentState.Tick();
         if (currentState.isFinished) {
             try {
-                currentState = states[++i];
+                stateList.Dequeue();
+                currentState = stateList.Peek();
                 player.SetActive(true);
                 mapGen.SetActive(true);
                 currentState.Enter();
