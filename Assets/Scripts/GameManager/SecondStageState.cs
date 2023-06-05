@@ -19,7 +19,7 @@ public class SecondStageState : State {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         gameManager.itemInfo.Clear();
 
-        Debug.Log("Starting Stage 1");
+        Debug.Log("DEBUG: Starting Stage 2");
     }
 
     public override void Tick() {
@@ -37,9 +37,9 @@ public class SecondStageState : State {
     }
 
     public override void Exit() {
-        Debug.Log("First stage Cleared!");
+        Debug.Log("DEBUG: Second stage Cleared");
         playerScript.gameObject.SetActive(false);
-        gameManager.mapGen.SetActive(false);
+        gameManager.mapGeneratorObject.SetActive(false);
         isFinished = true;
     }
 }

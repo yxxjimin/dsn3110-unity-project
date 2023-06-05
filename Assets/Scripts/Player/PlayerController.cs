@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour {
             }
 
             /*
-             * KEYBOARD MODE
+             * KEYBOARD DEBUG
              */
             else {
                 if (timePassed > 0.2f) {
@@ -84,11 +84,13 @@ public class PlayerController : MonoBehaviour {
             
             // Move Character
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, laneChangeSpeed * Time.deltaTime);
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-            timePassed += Time.deltaTime;
+
         } else {
             // TBA: 보드에서 떨어질 시 실행할 내용
+            Debug.Log("DEBUG: Off board");
         }
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        timePassed += Time.deltaTime;
     }
 
     void OnDisable() {
@@ -123,6 +125,12 @@ public class PlayerController : MonoBehaviour {
         // else timeOffBoard = 0f;
 
         // if (timeOffBoard > 0.5f) return false;
+
+        // Debug
+        if (Input.GetButton("Jump")) timeOffBoard += Time.deltaTime;
+        else timeOffBoard = 0;
+
+        if (timeOffBoard > 0.5f) return false;
         return true;
     }
 }

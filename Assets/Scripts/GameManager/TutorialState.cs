@@ -17,9 +17,6 @@ public class TutorialState : State {
 
     // Consuming Item
     private bool isItemConsumed = false;
-    
-    // Motion Detecting
-    private bool isMotioned = false;
 
     // Temporary start trigger
     private float startTimer = 3f;
@@ -31,7 +28,7 @@ public class TutorialState : State {
 
         gameManager.itemInfo.Clear();
 
-        Debug.Log("Starting Tutorial");
+        Debug.Log("DEBUG: Starting Tutorial");
     }
 
     public override void Tick() {
@@ -62,11 +59,6 @@ public class TutorialState : State {
             }
         }
 
-        // 모션 감지
-        else if (!isMotioned) {
-            isMotioned = true;
-        }
-
         // 튜토리얼 완료
         else {
             Exit();
@@ -74,9 +66,9 @@ public class TutorialState : State {
     }
 
     public override void Exit() {
-        Debug.Log("Tutorial Cleared!");
+        Debug.Log("DEBUG: Tutorial Cleared");
         playerScript.gameObject.SetActive(false);
-        gameManager.mapGen.SetActive(false);
+        gameManager.mapGeneratorObject.SetActive(false);
         isFinished = true;
     }
 }
