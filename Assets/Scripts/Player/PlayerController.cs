@@ -12,13 +12,13 @@ public class PlayerController : MonoBehaviour {
     public float speed;
     private float timePassed = 0f;
     public bool movePermitted;
-    public bool isOnBoard;
+    public float timeOffBoard = 0f;
 
     // Arduino serial port
     private static string joystickPortName = "/dev/cu.usbmodem2101";
     private SerialPort joystick = new SerialPort(joystickPortName, 9600);
-    // private static string balanceBallPortName = "/dev/cu.usbmodem1101";
-    // private SerialPort balanceBall = new SerialPort(balanceBallPortName, 9600);
+    private static string balanceBallPortName = "/dev/cu.usbmodem1101";
+    private SerialPort balanceBall = new SerialPort(balanceBallPortName, 9600);
 
     // Player item info
     private GameManager gameManager;
@@ -36,7 +36,6 @@ public class PlayerController : MonoBehaviour {
         catch {
             Debug.Log("Connection Failed");
         }
-        isOnBoard = true;
 
         // Initial location
         transform.position = new Vector3(0, -0.570f, 0);
@@ -47,7 +46,7 @@ public class PlayerController : MonoBehaviour {
     }
     
     void Update() {
-        if (isOnBoard) {
+        if (IsOnBoard()) {
             /*
              * ARDUINO MODE
              */
@@ -113,5 +112,16 @@ public class PlayerController : MonoBehaviour {
 
         currentLane = targetLane;
         targetPosition = new Vector3((currentLane - 1) * laneWidth, transform.position.y, 0);
+    }
+
+    bool IsOnBoard() {
+        // balanceBall.Write("c");
+        // int velostatVal = balanceBall.ReadByte();
+        
+        // if (velostatVal == 0) timeOffBoard += Time.deltaTime;
+        // else timeOffBoard = 0f;
+
+        // if (timeOffBoard > 0.5f) return false;
+        return true;
     }
 }

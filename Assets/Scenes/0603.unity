@@ -51522,7 +51522,7 @@ MonoBehaviour:
   laneChangeSpeed: 10
   speed: 5
   movePermitted: 1
-  isOnBoard: 1
+  timeOffBoard: 0
 --- !u!54 &1514662614
 Rigidbody:
   m_ObjectHideFlags: 0

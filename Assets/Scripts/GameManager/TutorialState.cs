@@ -29,7 +29,6 @@ public class TutorialState : State {
         playerScript.movePermitted = false;
         isFinished = false;
 
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         gameManager.itemInfo.Clear();
 
         Debug.Log("Starting Tutorial");
@@ -40,7 +39,7 @@ public class TutorialState : State {
         
         // 보수볼 균형잡기 5초
         if (!isBalanced) {
-            if (playerScript.isOnBoard) balancedTime += Time.deltaTime;
+            if (playerScript.timeOffBoard <= 0.5f) balancedTime += Time.deltaTime;
             else balancedTime = 0;
 
             if (balancedTime > 5f) isBalanced = true;
