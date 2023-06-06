@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FirstStageState : State {
+public class InfiniteRunState : State {
     private PlayerController playerScript;
     private GameObject player;
     public GameManager gameManager;
@@ -40,7 +40,8 @@ public class FirstStageState : State {
         if (player.transform.position.z > gameManager.zLimit) {
             playerScript.movePermitted = false;
             playerScript.targetPosition = new Vector3(playerScript.targetPosition.x, player.transform.position.y, player.transform.position.z);
-            endTimer = 0f;
+            playerScript.movePermitted = false;
+            playerScript.lrMovePermitted = false;
         }
     }
 

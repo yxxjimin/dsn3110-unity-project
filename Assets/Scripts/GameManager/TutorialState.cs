@@ -17,22 +17,24 @@ public class TutorialState : State {
 
     // Consuming Item
     private bool isItemConsumed = false;
-    
-    // Motion Detecting
-    private bool isMotioned = false;
 
     // Temporary start trigger
     private float startTimer = 3f;
 
+    public GameObject dialogue;
+
     public override void Enter() {
         playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         playerScript.movePermitted = false;
+        playerScript.lrMovePermitted = true;
         isFinished = false;
 
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager.fishRatio = 1;
+        gameManager.superFishRatio = 0;
+
         gameManager.itemInfo.Clear();
 
-        Debug.Log("Starting Tutorial");
+        Debug.Log("TUTORIAL: Starting Tutorial");
     }
 
     public override void Tick() {
@@ -40,7 +42,7 @@ public class TutorialState : State {
         
         // 보수볼 균형잡기 5초
         if (!isBalanced) {
-            if (playerScript.isOnBoard) balancedTime += Time.deltaTime;
+            if (playerScript.timeOffBoard <= 0.5f) balancedTime += Time.deltaTime;
             else balancedTime = 0;
 
             if (balancedTime > 5f) isBalanced = true;
@@ -63,21 +65,31 @@ public class TutorialState : State {
             }
         }
 
-        // 모션 감지
-        else if (!isMotioned) {
-            isMotioned = true;
-        }
-
         // 튜토리얼 완료
         else {
-            Exit();
+            dialogue.SetActive(true);
+
+            playerScript.movePermitted = false;
+            playerScript.lrMovePermitted = false;
+            
+            if (playerScript.joystick.IsOpen) {
+                playerScript.joystick.Write("0");
+                string readVal = playerScript.joystick.ReadLine();
+                int inputVal = int.Parse(readVal);
+
+                if (inputVal == 1) {
+                    dialogue.SetActive(false);
+                    Exit();
+                }
+            }
+            // Exit();
         }
     }
 
     public override void Exit() {
-        Debug.Log("Tutorial Cleared!");
+        Debug.Log("TUTORIAL: Moving to next state");
         playerScript.gameObject.SetActive(false);
-        gameManager.mapGen.SetActive(false);
+        gameManager.mapGeneratorObject.SetActive(false);
         isFinished = true;
     }
 }

@@ -3,36 +3,66 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-    private State currentState;
-    public GameObject player;
-    public GameObject mapGen;
-    public State[] states;
+    // Objects
+    public GameObject playerObject;
+    public GameObject mapGeneratorObject;
 
-    private int i = 0;
+    // State settings
+    [SerializeField]
+    private State tutorialStage, firstStage, secondStage, infiniteRun;
+    private State currentState;
+    private Queue<State> stateList;
+    private bool isCleared;
+    
+    // Item configs
     public Dictionary<string, int> itemInfo;
 
+    // Map configs
+    public float zLimit;
+    public float fishRatio;
+    public float superFishRatio;
+
+    // Debug Flag
+    [SerializeField] private bool DEBUG_MODE;
+
     void Start() {
-        currentState = states[i];
         itemInfo = new Dictionary<string, int>();
+
+        stateList = new Queue<State>();
+        if (!DEBUG_MODE) {
+            // stateList.Enqueue(tutorialStage);
+            stateList.Enqueue(firstStage);
+            // stateList.Enqueue(secondStage);
+        } else {
+            stateList.Enqueue(infiniteRun);
+        }
+
+        currentState = stateList.Peek();
         currentState.Enter();
     }
 
     void Update() {
         currentState.Tick();
+        isCleared = (playerObject.transform.position.z > zLimit) ?
+                        true : false;
         if (currentState.isFinished) {
-            try {
-                currentState = states[++i];
-                player.SetActive(true);
-                mapGen.SetActive(true);
+            Debug.LogFormat("GAME_MANAGER: Cleared - {0}", isCleared);
+
+            // Move to next stage
+            stateList.Dequeue();
+            if (stateList.TryDequeue(out currentState)) {
+                playerObject.SetActive(true);
+                mapGeneratorObject.SetActive(true);
                 currentState.Enter();
-            } catch {
-                Debug.Log("끝~~~~~~~~~~~");
+            } else {
+                int fishCount = itemInfo.ContainsKey("Fish") ? itemInfo["Fish"] : 0
+                                + (itemInfo.ContainsKey("Super Fish") ? itemInfo["Super Fish"] : 0);
+                int bombCount = itemInfo.ContainsKey("Bomb") ? itemInfo["Bomb"] : 0;
+                Debug.LogFormat("GAME_MANAGER: More fish - {0}", (fishCount > bombCount) ? true : false);
                 GameObject cam = GameObject.Find("Main Camera");
                 cam.transform.position = new Vector3(0, 0, 0);
             }
-            
         }
-        // Debug.LogFormat("Fish, {0}", itemInfo["Fish"]);
     }
 }
 

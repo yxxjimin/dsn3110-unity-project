@@ -6,12 +6,11 @@ public class ItemController : MonoBehaviour{
     public enum ItemType { FISH, SUPERFISH, BOMB };
     public ItemType itemType;
     public GameObject[] itemPrefabs;
-    public float fishRatio;
-    public float superFishRatio;
+    [SerializeField] private GameManager gameManager;
 
     void OnEnable() {
         float probability = Random.Range(0f, 1f);
-        itemType = (probability > fishRatio) ? ItemType.BOMB : ((probability > fishRatio * superFishRatio) ? ItemType.FISH : ItemType.SUPERFISH);
+        itemType = (probability > gameManager.fishRatio) ? ItemType.BOMB : ((probability > gameManager.fishRatio * gameManager.superFishRatio) ? ItemType.FISH : ItemType.SUPERFISH);
         
         switch (itemType) {
             case ItemType.FISH: 
