@@ -6,21 +6,18 @@ using UnityEngine.UI;   // Silder class 사용하기 위해 추가합니다.
 public class SliderTimer : MonoBehaviour {
     Slider slTimer;
     float fSliderBarTime;
-    float startTimer = 3f;
+    private FirstStageState firstStage;
 
     void Start() {
         slTimer = GetComponent<Slider>();
+        firstStage = GameObject.Find("FirstStage").GetComponent<FirstStageState>();
     }
 
     void Update() {
-        if (startTimer > 0f) {
-            startTimer -= Time.deltaTime;
-        } else {
+        if (firstStage.startTimer < 0) {
             if (slTimer.value > 0.0f) {
             // 시간이 변경한 만큼 slider Value 변경을 합니다.
                 slTimer.value -= Time.deltaTime;
-            } else {
-                Debug.Log("Time is Zero.");
             }
         }
     }

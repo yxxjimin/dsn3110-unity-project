@@ -9,7 +9,7 @@ public class FirstStageState : State {
 
     // Temporary start trigger
     public bool dialogueFinished;
-    private float startTimer = 3f;
+    public float startTimer = 3f;
     private float endTimer = 45f;
 
     public override void Enter() {
@@ -44,8 +44,9 @@ public class FirstStageState : State {
         // Finish line
         if (player.transform.position.z > gameManager.zLimit) {
             playerScript.movePermitted = false;
+            playerScript.lrMovePermitted = false;
             playerScript.targetPosition = new Vector3(playerScript.targetPosition.x, player.transform.position.y, player.transform.position.z);
-            endTimer = 0f;
+            endTimer = 3f;
         }
     }
 
