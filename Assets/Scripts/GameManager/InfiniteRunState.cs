@@ -9,7 +9,7 @@ public class InfiniteRunState : State {
 
     // Temporary start trigger
     private float startTimer = 3f;
-    private float endTimer = 48f;
+    private float endTimer = 10000f;
 
     public override void Enter() {
         player = GameObject.Find("Player");
@@ -23,8 +23,9 @@ public class InfiniteRunState : State {
 
         gameManager.fishRatio = 0.6f;
         gameManager.superFishRatio =  0.3f;
+        gameManager.zLimit = 10000f;
 
-        Debug.Log("FIRST_STAGE: Starting Stage 1");
+        Debug.Log("INFINITE: Starting infinite mode");
     }
 
     public override void Tick() {
@@ -46,7 +47,7 @@ public class InfiniteRunState : State {
     }
 
     public override void Exit() {
-        Debug.Log("FIRST_STAGE: Moving to next state");
+        Debug.Log("INFINITE: Should not be called");
         playerScript.gameObject.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
         isFinished = true;

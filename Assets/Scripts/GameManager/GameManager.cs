@@ -43,8 +43,7 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         currentState.Tick();
-        isCleared = (playerObject.transform.position.z > zLimit) ?
-                        true : false;
+        isCleared = (playerObject.transform.position.z > zLimit) ? true : false;
         if (currentState.isFinished) {
             Debug.LogFormat("GAME_MANAGER: Cleared - {0}", isCleared);
 
