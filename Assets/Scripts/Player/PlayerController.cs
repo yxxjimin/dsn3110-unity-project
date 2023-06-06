@@ -12,12 +12,13 @@ public class PlayerController : MonoBehaviour {
     public float speed;
     private float timePassed = 0f;
     public bool movePermitted;
+    public bool lrMovePermitted;
     public float timeOffBoard = 0f;
 
     // Arduino serial port
-    private static string joystickPortName = "/dev/cu.usbmodem2101";
-    private SerialPort joystick = new SerialPort(joystickPortName, 9600);
-    private static string balanceBallPortName = "/dev/cu.usbmodem1101";
+    private static string joystickPortName = "/dev/cu.usbmodem1101";
+    public SerialPort joystick = new SerialPort(joystickPortName, 9600);
+    private static string balanceBallPortName = "/dev/cu.usbmodem2101";
     private SerialPort balanceBall = new SerialPort(balanceBallPortName, 9600);
 
     // Player item info
@@ -84,7 +85,9 @@ public class PlayerController : MonoBehaviour {
             }
             
             // Move Character
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, laneChangeSpeed * Time.deltaTime);
+            if (lrMovePermitted) {
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, laneChangeSpeed * Time.deltaTime);
+            }
 
         } else {
             // TBA: 보드에서 떨어질 시 실행할 내용

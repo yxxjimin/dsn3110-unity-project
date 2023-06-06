@@ -21,9 +21,12 @@ public class TutorialState : State {
     // Temporary start trigger
     private float startTimer = 3f;
 
+    public GameObject dialogue;
+
     public override void Enter() {
         playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         playerScript.movePermitted = false;
+        playerScript.lrMovePermitted = true;
         isFinished = false;
 
         gameManager.fishRatio = 1;
@@ -64,7 +67,22 @@ public class TutorialState : State {
 
         // 튜토리얼 완료
         else {
-            Exit();
+            dialogue.SetActive(true);
+
+            playerScript.movePermitted = false;
+            playerScript.lrMovePermitted = false;
+            
+            if (playerScript.joystick.IsOpen) {
+                playerScript.joystick.Write("0");
+                string readVal = playerScript.joystick.ReadLine();
+                int inputVal = int.Parse(readVal);
+
+                if (inputVal == 1) {
+                    dialogue.SetActive(false);
+                    Exit();
+                }
+            }
+            // Exit();
         }
     }
 
