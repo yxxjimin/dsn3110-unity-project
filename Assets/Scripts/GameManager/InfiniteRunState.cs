@@ -15,6 +15,7 @@ public class InfiniteRunState : State {
         player = GameObject.Find("Player");
         playerScript = player.GetComponent<PlayerController>();
         playerScript.movePermitted = false;
+        playerScript.lrMovePermitted = true;
         playerScript.isReversed = false;
         isFinished = false;
 

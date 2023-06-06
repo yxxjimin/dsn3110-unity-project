@@ -30,9 +30,9 @@ public class GameManager : MonoBehaviour {
 
         stateList = new Queue<State>();
         if (!DEBUG_MODE) {
-            stateList.Enqueue(tutorialStage);
+            // stateList.Enqueue(tutorialStage);
             stateList.Enqueue(firstStage);
-            stateList.Enqueue(secondStage);
+            // stateList.Enqueue(secondStage);
         } else {
             stateList.Enqueue(infiniteRun);
         }

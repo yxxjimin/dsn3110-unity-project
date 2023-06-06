@@ -15,6 +15,7 @@ public class FirstStageState : State {
         player = GameObject.Find("Player");
         playerScript = player.GetComponent<PlayerController>();
         playerScript.movePermitted = false;
+        playerScript.lrMovePermitted = true;
         isFinished = false;
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
