@@ -8,18 +8,19 @@ public class SecondStageState : State {
 
     // Temporary start trigger
     private float startTimer = 3f;
-    private float endTimer = 30f;
+    private float endTimer = 48f;
 
     public override void Enter() {
         playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
         playerScript.movePermitted = false;
         playerScript.isReversed = true;
         isFinished = false;
+        gameManager.zLimit = 780f;
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        gameManager.itemInfo.Clear();
+        // gameManager.itemInfo.Clear();
 
-        Debug.Log("DEBUG: Starting Stage 2");
+        Debug.Log("SECOND_STAGE: Starting Stage 2");
     }
 
     public override void Tick() {
@@ -37,7 +38,7 @@ public class SecondStageState : State {
     }
 
     public override void Exit() {
-        Debug.Log("DEBUG: Second stage Cleared");
+        Debug.Log("SECOND_STAGE: Moving to next state");
         playerScript.gameObject.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
         isFinished = true;

@@ -9,7 +9,7 @@ public class FirstStageState : State {
 
     // Temporary start trigger
     private float startTimer = 3f;
-    private float endTimer = 30f;
+    private float endTimer = 48f;
 
     public override void Enter() {
         player = GameObject.Find("Player");
@@ -20,7 +20,10 @@ public class FirstStageState : State {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         gameManager.itemInfo.Clear();
 
-        Debug.Log("DEBUG: Starting Stage 1");
+        gameManager.fishRatio = 0.6f;
+        gameManager.superFishRatio =  0.3f;
+
+        Debug.Log("FIRST_STAGE: Starting Stage 1");
     }
 
     public override void Tick() {
@@ -41,7 +44,7 @@ public class FirstStageState : State {
     }
 
     public override void Exit() {
-        Debug.Log("DEBUG: First stage Cleared");
+        Debug.Log("FIRST_STAGE: Moving to next state");
         playerScript.gameObject.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
         isFinished = true;

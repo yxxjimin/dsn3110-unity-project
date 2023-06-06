@@ -26,9 +26,12 @@ public class TutorialState : State {
         playerScript.movePermitted = false;
         isFinished = false;
 
+        gameManager.fishRatio = 1;
+        gameManager.superFishRatio = 0;
+
         gameManager.itemInfo.Clear();
 
-        Debug.Log("DEBUG: Starting Tutorial");
+        Debug.Log("TUTORIAL: Starting Tutorial");
     }
 
     public override void Tick() {
@@ -66,7 +69,7 @@ public class TutorialState : State {
     }
 
     public override void Exit() {
-        Debug.Log("DEBUG: Tutorial Cleared");
+        Debug.Log("TUTORIAL: Moving to next state");
         playerScript.gameObject.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
         isFinished = true;

@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour {
 
     // Map configs
     public float zLimit;
+    public float fishRatio;
+    public float superFishRatio;
 
     // Debug Flag
     [SerializeField] private bool DEBUG_MODE;
@@ -44,7 +46,7 @@ public class GameManager : MonoBehaviour {
         isCleared = (playerObject.transform.position.z > zLimit) ?
                         true : false;
         if (currentState.isFinished) {
-            Debug.Log(isCleared);
+            Debug.LogFormat("GAME_MANAGER: Cleared - {0}", isCleared);
 
             // Move to next stage
             stateList.Dequeue();
@@ -53,7 +55,10 @@ public class GameManager : MonoBehaviour {
                 mapGeneratorObject.SetActive(true);
                 currentState.Enter();
             } else {
-                Debug.Log("DEBUG: All Cleared");
+                int fishCount = itemInfo.ContainsKey("Fish") ? itemInfo["Fish"] : 0
+                                + (itemInfo.ContainsKey("Super Fish") ? itemInfo["Super Fish"] : 0);
+                int bombCount = itemInfo.ContainsKey("Bomb") ? itemInfo["Bomb"] : 0;
+                Debug.LogFormat("GAME_MANAGER: More fish - {0}", (fishCount > bombCount) ? true : false);
                 GameObject cam = GameObject.Find("Main Camera");
                 cam.transform.position = new Vector3(0, 0, 0);
             }

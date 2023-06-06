@@ -21,7 +21,7 @@ public class InfiniteRunState : State {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         gameManager.itemInfo.Clear();
 
-        Debug.Log("DEBUG: Entering infinite run mode");
+        Debug.Log("DEBUG: Infinite run mode");
     }
 
     public override void Tick() {
@@ -46,7 +46,6 @@ public class InfiniteRunState : State {
     }
 
     public override void Exit() {
-        Debug.Log("DEBUG: Should never be called");
         playerScript.gameObject.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
         isFinished = true;

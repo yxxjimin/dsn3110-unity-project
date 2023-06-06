@@ -27,16 +27,16 @@ public class PlayerController : MonoBehaviour {
     void OnEnable() {
         // Arduino port initialization
         try {
-            // joystick.Open();
-            // joystick.ReadTimeout = 16;
-            // Debug.Log("Joystick Connection Open");
+            joystick.Open();
+            joystick.ReadTimeout = 16;
+            Debug.Log("PLAYER_CONTROLLER: Joystick Connection Open");
 
             balanceBall.Open();
             balanceBall.ReadTimeout = 16;
-            Debug.Log("Balance Ball Connection Open");
+            Debug.Log("PLAYER_CONTROLLER: Balance Ball Connection Open");
         } 
         catch {
-            Debug.Log("Connection Failed");
+            Debug.Log("PLAYER_CONTROLLER: Connection Failed");
         }
 
         // Initial location
@@ -88,7 +88,7 @@ public class PlayerController : MonoBehaviour {
 
         } else {
             // TBA: 보드에서 떨어질 시 실행할 내용
-            Debug.Log("DEBUG: Off board");
+            Debug.Log("PLAYER_CONTROLLER: Off board");
         }
         transform.rotation = Quaternion.Euler(0, 0, 0);
         timePassed += Time.deltaTime;

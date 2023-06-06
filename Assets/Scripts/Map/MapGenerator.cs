@@ -13,6 +13,7 @@ public class MapGenerator : MonoBehaviour {
     private Queue<GameObject> inactiveTileQueue;
     private Queue<GameObject> activeTileQueue;
     private GameObject mostRecentTile;
+    public GameObject finishLine;
 
     // Item Pooling
     public int totalItemCount = 10;
@@ -53,9 +54,8 @@ public class MapGenerator : MonoBehaviour {
         startTile.transform.localPosition = new Vector3(0, 0, 3f);
 
         // Finish line
-        GameObject finishLine = GameObject.FindWithTag("Finish");
         finishLine.SetActive(true);
-        finishLine.transform.localPosition = new Vector3(0, -0.48f, gameManager.zLimit);
+        finishLine.transform.localPosition = new Vector3(0.18f, -0.37f, gameManager.zLimit);
     }
 
     void Update() {
@@ -89,7 +89,6 @@ public class MapGenerator : MonoBehaviour {
     }
 
     void LoadItems(int num) {
-        // Debug.LogFormat("Active: {0}, Inactive: {1}", activeItemQueue.Count, inactiveItemQueue.Count);
         // Collect items to pool
         if (activeItemQueue.Count > 0) {
             GameObject leastRecentItem;
@@ -107,6 +106,7 @@ public class MapGenerator : MonoBehaviour {
             item.SetActive(true);
             float generateX = (Random.Range(0, 3) - 1) * 1.8f;
             float generateZ = mostRecentTile.transform.localPosition.z + Random.Range(0, (int) tileLength); // Range: float -> [,] / int -> [,)
+            generateZ = (generateZ > gameManager.zLimit) ? gameManager.zLimit - 5f : generateZ; // Assert z < zLimit
             item.transform.localPosition = new Vector3(generateX, 0, generateZ);
             activeItemQueue.Enqueue(item);
         }        
