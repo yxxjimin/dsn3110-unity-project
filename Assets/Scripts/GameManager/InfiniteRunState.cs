@@ -3,50 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InfiniteRunState : State {
-    private GameObject player;
     private PlayerController playerScript;
+    private GameObject player;
     public GameManager gameManager;
 
     // Temporary start trigger
     private float startTimer = 3f;
-    [SerializeField] private float endTimer;
+    private float endTimer = 48f;
 
     public override void Enter() {
         player = GameObject.Find("Player");
         playerScript = player.GetComponent<PlayerController>();
         playerScript.movePermitted = false;
         playerScript.lrMovePermitted = true;
-        playerScript.isReversed = false;
         isFinished = false;
 
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         gameManager.itemInfo.Clear();
 
-        Debug.Log("DEBUG: Infinite run mode");
+        gameManager.fishRatio = 0.6f;
+        gameManager.superFishRatio =  0.3f;
+
+        Debug.Log("FIRST_STAGE: Starting Stage 1");
     }
 
     public override void Tick() {
-        if (startTimer > 0) {
-            startTimer -= Time.deltaTime;
-        } else {
-            playerScript.movePermitted = true;
-        }
+        // Starting timer
+        if (startTimer > 0) startTimer -= Time.deltaTime;
+        else playerScript.movePermitted = true;
 
-        if (endTimer > 0) {
-            endTimer -= Time.deltaTime;
-        } else {
-            Debug.LogFormat("DEBUG: Player Z = {0}", GameObject.Find("Player").transform.position.z);
-            Exit();
-        }
+        // Game length timer
+        if (endTimer > 0) endTimer -= Time.deltaTime;
+        else Exit();
 
+        // Finish line
         if (player.transform.position.z > gameManager.zLimit) {
             playerScript.movePermitted = false;
             playerScript.targetPosition = new Vector3(playerScript.targetPosition.x, player.transform.position.y, player.transform.position.z);
-            endTimer = 0f;
+            playerScript.movePermitted = false;
+            playerScript.lrMovePermitted = false;
         }
     }
 
     public override void Exit() {
+        Debug.Log("FIRST_STAGE: Moving to next state");
         playerScript.gameObject.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
         isFinished = true;

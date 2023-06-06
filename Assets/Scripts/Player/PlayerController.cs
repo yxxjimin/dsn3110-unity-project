@@ -103,10 +103,27 @@ public class PlayerController : MonoBehaviour {
     }
 
     void OnTriggerEnter(Collider item) {
-        if (gameManager.itemInfo.ContainsKey(item.tag)) {
-            gameManager.itemInfo[item.tag] += 1;
-        } else {
-            gameManager.itemInfo.Add(item.tag, 1);
+        string tag = item.tag;
+        switch(tag) {
+            case "Super Fish":
+                if (gameManager.itemInfo.ContainsKey("Fish")) {
+                    gameManager.itemInfo["Fish"] += 2;
+                } else {
+                    gameManager.itemInfo.Add("Fish", 2);
+                } break;
+            case "Fish":
+                if (gameManager.itemInfo.ContainsKey("Fish")) {
+                    gameManager.itemInfo["Fish"] += 1;
+                } else {
+                    gameManager.itemInfo.Add("Fish", 1);
+                } break;
+            case "Bomb":
+                if (gameManager.itemInfo.ContainsKey("Bomb")) {
+                    gameManager.itemInfo["Bomb"] += 1;
+                } else {
+                    gameManager.itemInfo.Add("Bomb", 1);
+                } break;
+            default: break;
         }
 
         item.gameObject.SetActive(false);
