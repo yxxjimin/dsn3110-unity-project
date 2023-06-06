@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class InfiniteRunState : State {
+    private GameObject player;
     private PlayerController playerScript;
     public GameManager gameManager;
 
     // Temporary start trigger
     private float startTimer = 3f;
-    [SerializeField]
-    private float endTimer;
+    [SerializeField] private float endTimer;
 
     public override void Enter() {
-        playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        player = GameObject.Find("Player");
+        playerScript = player.GetComponent<PlayerController>();
         playerScript.movePermitted = false;
         playerScript.isReversed = false;
         isFinished = false;
@@ -35,6 +36,12 @@ public class InfiniteRunState : State {
         } else {
             Debug.LogFormat("DEBUG: Player Z = {0}", GameObject.Find("Player").transform.position.z);
             Exit();
+        }
+
+        if (player.transform.position.z > gameManager.zLimit) {
+            playerScript.movePermitted = false;
+            playerScript.targetPosition = new Vector3(playerScript.targetPosition.x, player.transform.position.y, player.transform.position.z);
+            endTimer = 0f;
         }
     }
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FirstStageState : State {
     private PlayerController playerScript;
+    private GameObject player;
     public GameManager gameManager;
 
     // Temporary start trigger
@@ -11,7 +12,8 @@ public class FirstStageState : State {
     private float endTimer = 30f;
 
     public override void Enter() {
-        playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        player = GameObject.Find("Player");
+        playerScript = player.GetComponent<PlayerController>();
         playerScript.movePermitted = false;
         isFinished = false;
 
@@ -22,11 +24,20 @@ public class FirstStageState : State {
     }
 
     public override void Tick() {
+        // Starting timer
         if (startTimer > 0) startTimer -= Time.deltaTime;
         else playerScript.movePermitted = true;
 
+        // Game length timer
         if (endTimer > 0) endTimer -= Time.deltaTime;
         else Exit();
+
+        // Finish line
+        if (player.transform.position.z > gameManager.zLimit) {
+            playerScript.movePermitted = false;
+            playerScript.targetPosition = new Vector3(playerScript.targetPosition.x, player.transform.position.y, player.transform.position.z);
+            endTimer = 0f;
+        }
     }
 
     public override void Exit() {

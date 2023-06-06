@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour {
-    public GameObject player;
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameManager gameManager;
 
     // Tile Pooling
     public float tileLength;
@@ -50,6 +51,11 @@ public class MapGenerator : MonoBehaviour {
         // Start tile
         GameObject startTile = GameObject.Find("StartTile");
         startTile.transform.localPosition = new Vector3(0, 0, 3f);
+
+        // Finish line
+        GameObject finishLine = GameObject.FindWithTag("Finish");
+        finishLine.SetActive(true);
+        finishLine.transform.localPosition = new Vector3(0, -0.48f, gameManager.zLimit);
     }
 
     void Update() {
@@ -57,7 +63,7 @@ public class MapGenerator : MonoBehaviour {
         Vector3 playerPosition = player.transform.position;
         Vector3 tilePosition = mostRecentTile.transform.position;
 
-        if (playerPosition.z > tilePosition.z - (displayedTiles - 2) * tileLength) {
+        if ((playerPosition.z > tilePosition.z - (displayedTiles - 2) * tileLength) && (tilePosition.z < gameManager.zLimit - tileLength / 2)) {
             LoadTile();
         }
     }

@@ -5,7 +5,7 @@ using System.IO.Ports;
 
 public class PlayerController : MonoBehaviour {
     // Movements
-    private Vector3 targetPosition;
+    public Vector3 targetPosition;
     private int currentLane;
     private const float laneWidth = 1.8f;
     public float laneChangeSpeed;
@@ -119,23 +119,19 @@ public class PlayerController : MonoBehaviour {
     }
 
     bool IsOnBoard() {
-        balanceBall.Write("c");
-        string readVal = balanceBall.ReadLine();
-        if (readVal.Length > 0) {
-            int velostatVal = int.Parse(readVal);
-            if (velostatVal < 700) timeOffBoard += Time.deltaTime;
-            else timeOffBoard = 0f;
+        if (balanceBall.IsOpen) {
+            balanceBall.Write("c");
+            string readVal = balanceBall.ReadLine();
+            if (readVal.Length > 0) {
+                int velostatVal = int.Parse(readVal);
+                if (velostatVal < 700) timeOffBoard += Time.deltaTime;
+                else timeOffBoard = 0f;
+            }
+        } else {
+            timeOffBoard = 0f;
         }
-
+        
         if (timeOffBoard > 0.3f) return false;
         return true;
-
-        // Debug
-
-        // if (Input.GetButton("Jump")) timeOffBoard += Time.deltaTime;
-        // else timeOffBoard = 0;
-
-        // if (timeOffBoard > 0.5f) return false;
-        // return true;
     }
 }

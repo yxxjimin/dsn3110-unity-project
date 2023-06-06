@@ -12,13 +12,16 @@ public class GameManager : MonoBehaviour {
     private State tutorialStage, firstStage, secondStage, infiniteRun;
     private State currentState;
     private Queue<State> stateList;
+    private bool isCleared;
     
-    // Item info
+    // Item configs
     public Dictionary<string, int> itemInfo;
 
+    // Map configs
+    public float zLimit;
+
     // Debug Flag
-    [SerializeField]
-    private bool DEBUG_MODE;
+    [SerializeField] private bool DEBUG_MODE;
 
     void Start() {
         itemInfo = new Dictionary<string, int>();
@@ -38,7 +41,12 @@ public class GameManager : MonoBehaviour {
 
     void Update() {
         currentState.Tick();
+        isCleared = (playerObject.transform.position.z > zLimit) ?
+                        true : false;
         if (currentState.isFinished) {
+            Debug.Log(isCleared);
+
+            // Move to next stage
             stateList.Dequeue();
             if (stateList.TryDequeue(out currentState)) {
                 playerObject.SetActive(true);

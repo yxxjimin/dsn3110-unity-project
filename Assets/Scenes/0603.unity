@@ -51116,6 +51116,7 @@ MonoBehaviour:
   tilePrefab: {fileID: 1086834871}
   totalItemCount: 10
   itemPrefab: {fileID: 1382482770}
+  zLimit: 780
 --- !u!4 &1504327302
 Transform:
   m_ObjectHideFlags: 0
