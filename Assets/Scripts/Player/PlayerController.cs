@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO.Ports;
 
 public class PlayerController : MonoBehaviour {
+    [SerializeField] private ControllerManager controller;
     // Movements
     public Vector3 targetPosition;
     private int currentLane;
@@ -16,36 +17,21 @@ public class PlayerController : MonoBehaviour {
     public float timeOffBoard = 0f;
 
     // Arduino serial port
-    private static string joystickPortName = "/dev/cu.usbmodem1101";
-    public SerialPort joystick = new SerialPort(joystickPortName, 9600);
-    private static string balanceBallPortName = "/dev/cu.usbmodem2101";
-    private SerialPort balanceBall = new SerialPort(balanceBallPortName, 9600);
+    public SerialPort joystick;
+    private SerialPort balanceBall;
 
     // Player item info
-    private GameManager gameManager;
     public bool isReversed;
     
     void OnEnable() {
         // Arduino port initialization
-        try {
-            joystick.Open();
-            joystick.ReadTimeout = 16;
-            Debug.Log("PLAYER_CONTROLLER: Joystick Connection Open");
-
-            balanceBall.Open();
-            balanceBall.ReadTimeout = 16;
-            Debug.Log("PLAYER_CONTROLLER: Balance Ball Connection Open");
-        } 
-        catch {
-            Debug.Log("PLAYER_CONTROLLER: Connection Failed");
-        }
+        joystick = controller.joystick;
+        balanceBall = controller.balanceBall;
 
         // Initial location
         transform.position = new Vector3(0, -0.570f, 0);
         targetPosition = new Vector3(0, -0.570f, 0);
         currentLane = 0;
-
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
     
     void Update() {
@@ -97,32 +83,12 @@ public class PlayerController : MonoBehaviour {
         timePassed += Time.deltaTime;
     }
 
-    void OnDisable() {
-        joystick.Close();
-        balanceBall.Close();
-    }
-
     void OnTriggerEnter(Collider item) {
         string tag = item.tag;
         switch(tag) {
-            case "Super Fish":
-                if (gameManager.itemInfo.ContainsKey("Fish")) {
-                    gameManager.itemInfo["Fish"] += 2;
-                } else {
-                    gameManager.itemInfo.Add("Fish", 2);
-                } break;
-            case "Fish":
-                if (gameManager.itemInfo.ContainsKey("Fish")) {
-                    gameManager.itemInfo["Fish"] += 1;
-                } else {
-                    gameManager.itemInfo.Add("Fish", 1);
-                } break;
-            case "Bomb":
-                if (gameManager.itemInfo.ContainsKey("Bomb")) {
-                    gameManager.itemInfo["Bomb"] += 1;
-                } else {
-                    gameManager.itemInfo.Add("Bomb", 1);
-                } break;
+            case "Super Fish": DataManager.instance.itemInfoDict["Fish"] += 2; break;
+            case "Fish": DataManager.instance.itemInfoDict["Fish"] += 1; break;
+            case "Bomb": DataManager.instance.itemInfoDict["Bomb"] += 1; break;
             default: break;
         }
 

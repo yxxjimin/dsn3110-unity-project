@@ -1,44 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FirstStageState : State {
     private PlayerController playerScript;
-    private GameObject player;
-    public GameManager gameManager;
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private string nextSceneName;
 
-    // Temporary start trigger
-    public bool dialogueFinished;
-    public float startTimer = 3f;
+    [SerializeField] private CutSceneDialogue dialogue;
     private float endTimer = 45f;
 
     public override void Enter() {
-        player = GameObject.Find("Player");
+        startTimer = 3f;
+
         playerScript = player.GetComponent<PlayerController>();
         playerScript.movePermitted = false;
         playerScript.lrMovePermitted = true;
         isFinished = false;
 
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        gameManager.itemInfo.Clear();
+        DataManager.instance.itemInfoDict["Fish"] = 0;
+        DataManager.instance.itemInfoDict["Bomb"] = 0;
 
-        gameManager.fishRatio = 0.6f;
-        gameManager.superFishRatio =  0.3f;
-
-        dialogueFinished = false;
+        gameManager.fishRatio = 0.5f;
+        gameManager.superFishRatio =  0.2f;
 
         Debug.Log("FIRST_STAGE: Starting Stage 1");
     }
 
     public override void Tick() {
-        if (dialogueFinished) {
+        if (dialogue.dialogueFinished) {
             // Starting timer
             if (startTimer > 0) startTimer -= Time.deltaTime;
             else playerScript.movePermitted = true;
 
             // Game length timer
             if (playerScript.movePermitted && endTimer > 0) endTimer -= Time.deltaTime;
-            else if (endTimer <= 0) Exit();
+            else if (endTimer <= 0) isFinished = true;
         }
         
         // Finish line
@@ -46,14 +45,15 @@ public class FirstStageState : State {
             playerScript.movePermitted = false;
             playerScript.lrMovePermitted = false;
             playerScript.targetPosition = new Vector3(playerScript.targetPosition.x, player.transform.position.y, player.transform.position.z);
-            endTimer = 3f;
+            endTimer = 0f;
         }
+
     }
 
     public override void Exit() {
         Debug.Log("FIRST_STAGE: Moving to next state");
-        playerScript.gameObject.SetActive(false);
+        player.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
-        isFinished = true;
+        SceneManager.LoadScene(nextSceneName);
     }
 }

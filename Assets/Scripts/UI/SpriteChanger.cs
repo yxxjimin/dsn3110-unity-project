@@ -20,7 +20,7 @@ public class SpriteChanger : MonoBehaviour {
 
     void Update() {
         string tag = (isFish) ? "Fish" : "Bomb";
-        itemCount = gameManager.itemInfo.ContainsKey(tag) ? gameManager.itemInfo[tag] : 0;
+        itemCount = DataManager.instance.itemInfoDict[tag];
 
         ChangeSprite(itemCount);
     }

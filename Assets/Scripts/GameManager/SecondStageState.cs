@@ -1,46 +1,61 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SecondStageState : State {
     private PlayerController playerScript;
-    public GameManager gameManager;
-
-    // Temporary start trigger
-    private float startTimer = 3f;
-    private float endTimer = 48f;
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private string nextSceneName;
+    [SerializeField] private CutSceneDialogue dialogue;
+    private float endTimer = 45f;
 
     public override void Enter() {
-        playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        startTimer = 3f;
+
+        playerScript = player.GetComponent<PlayerController>();
         playerScript.movePermitted = false;
+        playerScript.lrMovePermitted = true;
         playerScript.isReversed = true;
         isFinished = false;
-        gameManager.zLimit = 780f;
 
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        // gameManager.itemInfo.Clear();
+        gameManager.fishRatio = 0.5f;
+        gameManager.superFishRatio =  0.2f;
 
         Debug.Log("SECOND_STAGE: Starting Stage 2");
     }
 
     public override void Tick() {
-        if (startTimer > 0) {
-            startTimer -= Time.deltaTime;
-        } else {
-            playerScript.movePermitted = true;
-        }
+        if (dialogue.dialogueFinished) {
+            // Starting timer
+            if (startTimer > 0) startTimer -= Time.deltaTime;
+            else playerScript.movePermitted = true;
 
-        if (endTimer > 0) {
-            endTimer -= Time.deltaTime;
-        } else {
-            Exit();
+            // Game length timer
+            if (playerScript.movePermitted && endTimer > 0) endTimer -= Time.deltaTime;
+            else if (endTimer <= 0) isFinished = true;
+        }
+        
+        // Finish line
+        if (player.transform.position.z > gameManager.zLimit) {
+            playerScript.movePermitted = false;
+            playerScript.lrMovePermitted = false;
+            playerScript.targetPosition = new Vector3(playerScript.targetPosition.x, player.transform.position.y, player.transform.position.z);
+            endTimer = 0f;
         }
     }
 
     public override void Exit() {
         Debug.Log("SECOND_STAGE: Moving to next state");
-        playerScript.gameObject.SetActive(false);
+        player.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
-        isFinished = true;
+
+        if (DataManager.instance.itemInfoDict["Fish"] > DataManager.instance.itemInfoDict["Bomb"]) {
+            nextSceneName = "ZzapEnding";
+        } else {
+            nextSceneName = "JinEnding";
+        }
+        SceneManager.LoadScene(nextSceneName);
     }
 }

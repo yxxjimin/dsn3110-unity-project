@@ -1,95 +1,90 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TutorialState : State {
-    private PlayerController playerScript;
-    public GameManager gameManager; 
+    [SerializeField] private PlayerController player;
+    [SerializeField] private GameManager gameManager; 
+    [SerializeField] private string nextSceneName;
+    public bool startTask;
 
     // Balancing
-    private bool isBalanced = true;
+    public bool isBalanced = false;
     private float balancedTime = 0f;
 
     // Controlling
-    private bool isControlled = false;
+    public bool isControlled = false;
     public bool left = false;
     public bool right = false;
 
     // Consuming Item
-    private bool isItemConsumed = false;
-
-    // Temporary start trigger
-    private float startTimer = 3f;
-
-    public GameObject dialogue;
+    public bool isItemConsumed = false;
 
     public override void Enter() {
-        playerScript = GameObject.Find("Player").GetComponent<PlayerController>();
-        playerScript.movePermitted = false;
-        playerScript.lrMovePermitted = true;
+        startTimer = 3f;
+        player.movePermitted = false;
+        player.lrMovePermitted = false;
         isFinished = false;
 
         gameManager.fishRatio = 1;
         gameManager.superFishRatio = 0;
 
-        gameManager.itemInfo.Clear();
-
+        startTask = false;
         Debug.Log("TUTORIAL: Starting Tutorial");
     }
 
     public override void Tick() {
-        GameObject player = playerScript.gameObject;
-        
         // 보수볼 균형잡기 5초
         if (!isBalanced) {
-            if (playerScript.timeOffBoard <= 0.5f) balancedTime += Time.deltaTime;
-            else balancedTime = 0;
-
-            if (balancedTime > 5f) isBalanced = true;
+            if (startTask) {
+                if (player.timeOffBoard <= 0.5f) balancedTime += Time.deltaTime;
+                else balancedTime = 0;
+            }
+            
+            if (balancedTime > 7f) {
+                isBalanced = true;
+                startTask = false;
+            }
         }
 
         // 좌우 컨트롤
         else if (!isControlled) {
-            if (player.transform.position.x > 1) right = true;
-            else if (player.transform.position.x < -1) left = true;
+            if (startTask) {
+                player.lrMovePermitted = true;
+                if (player.gameObject.transform.position.x > 1) right = true;
+                else if (player.gameObject.transform.position.x < -1) left = true;
+            }
 
-            if (right && left) isControlled = true;
+            if (right && left) {
+                isControlled = true;
+                startTask = false;
+            }
         }
 
         // 아이템 먹기
         else if (!isItemConsumed) {
-            if (startTimer > 0) startTimer -= Time.deltaTime;
-            else {
-                playerScript.movePermitted = true;
-                if (gameManager.itemInfo.ContainsKey("Fish")) isItemConsumed = true;
+            if (startTask) {
+                if (startTimer > 0) startTimer -= Time.deltaTime;
+                else {
+                    player.movePermitted = true;
+                    if (DataManager.instance.itemInfoDict["Fish"] > 0) isItemConsumed = true;
+                    Debug.Log(DataManager.instance.itemInfoDict["Fish"]);
+                }
             }
         }
 
         // 튜토리얼 완료
         else {
-            dialogue.SetActive(true);
-
-            playerScript.movePermitted = false;
-            playerScript.lrMovePermitted = false;
-            
-            if (playerScript.joystick.IsOpen) {
-                playerScript.joystick.Write("0");
-                string readVal = playerScript.joystick.ReadLine();
-                int inputVal = int.Parse(readVal);
-
-                if (inputVal == 1) {
-                    dialogue.SetActive(false);
-                    Exit();
-                }
-            }
-            // Exit();
+            player.movePermitted = false;
+            player.lrMovePermitted = false;
         }
     }
 
     public override void Exit() {
         Debug.Log("TUTORIAL: Moving to next state");
-        playerScript.gameObject.SetActive(false);
+        player.gameObject.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
-        isFinished = true;
+        SceneManager.LoadScene(nextSceneName);
     }
 }

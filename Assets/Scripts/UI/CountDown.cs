@@ -8,22 +8,19 @@ public class CountDown : MonoBehaviour {
 
     Image currentImage;
     public Sprite[] imageArray;
-    private FirstStageState firstStage;
-    // private float startTimer = 3f;
+    [SerializeField] private State stage;
+    [SerializeField] private CutSceneDialogue dialogue;
 
     void Start() {
         currentImage = GetComponent<Image>();
-        firstStage = GameObject.Find("FirstStage").GetComponent<FirstStageState>();
     }
 
     void Update() {
-        if (firstStage.dialogueFinished) {
-            if (firstStage.startTimer > 2) ChangeSprite(0);
-            else if (firstStage.startTimer > 1) ChangeSprite(1);
-            else if (firstStage.startTimer > 0) ChangeSprite(2);
+        if (dialogue.dialogueFinished) {
+            if (stage.startTimer > 2) ChangeSprite(0);
+            else if (stage.startTimer > 1) ChangeSprite(1);
+            else if (stage.startTimer > 0) ChangeSprite(2);
             else this.gameObject.SetActive(false);
-
-            // startTimer -= Time.deltaTime;
         }
     }
 
