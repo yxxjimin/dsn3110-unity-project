@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour {
     public bool movePermitted;
     public bool lrMovePermitted;
     public float timeOffBoard = 0f;
+    [SerializeField] private bool endingFreeSwimming;
 
     // Arduino serial port
     public SerialPort joystick;
@@ -105,6 +106,10 @@ public class PlayerController : MonoBehaviour {
     }
 
     bool IsOnBoard() {
+        // In Ending
+        if (endingFreeSwimming) return true;
+
+        // In Stages
         if (balanceBall.IsOpen) {
             balanceBall.Write("c");
             string readVal = balanceBall.ReadLine();

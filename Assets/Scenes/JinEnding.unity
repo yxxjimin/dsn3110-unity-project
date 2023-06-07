@@ -1358,6 +1358,7 @@ MonoBehaviour:
   movePermitted: 1
   lrMovePermitted: 1
   timeOffBoard: 0
+  endingFreeSwimming: 1
   isReversed: 0
 --- !u!65 &1608875337
 BoxCollider:

@@ -20,6 +20,7 @@ public class TutorialSprite : MonoBehaviour {
     private Dictionary<Sprite, bool> displayHistory;
     private bool finishedCoroutine;
     private SerialPort joystick;
+    private bool fadeIn, fadeOut;
 
     void Start() {
         currentImage = GetComponent<Image>();
@@ -35,6 +36,9 @@ public class TutorialSprite : MonoBehaviour {
         itemConsumeDialogue.gameObject.SetActive(false);
 
         joystick = controller.joystick;
+
+        fadeIn = true;
+        fadeOut = true;
     }
 
     void Update() {
@@ -94,5 +98,25 @@ public class TutorialSprite : MonoBehaviour {
             yield return null;
         }
         finishedCoroutine = true;
+    }
+
+    IEnumerator FadeIn() {
+        Color c = currentImage.color;
+        for (float alpha = 1f; alpha >= 0f; alpha -= 0.03f) {
+            c.a = alpha < 0 ? 0 : alpha;
+            currentImage.color = c;
+            yield return null;
+        }
+        fadeIn = false;
+    }
+
+    IEnumerator FadeOut() {
+        Color c = currentImage.color;
+        for (float alpha = 0f; alpha <= 1f; alpha += 0.03f) {
+            c.a = alpha > 1 ? 1 : alpha;
+            currentImage.color = c;
+            yield return null;
+        }
+        fadeOut = false;
     }
 }

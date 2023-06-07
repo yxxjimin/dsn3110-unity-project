@@ -8,6 +8,7 @@ public class CutScene : MonoBehaviour {
     [SerializeField] private string nextSceneName;
     [SerializeField] private CutSceneDialogue dialogue;
     [SerializeField] private bool fadeOut;
+    [SerializeField] private bool fadeIn;
     [SerializeField] Image blackImage;
 
     void Start() {
@@ -20,7 +21,19 @@ public class CutScene : MonoBehaviour {
         if (dialogue.dialogueFinished) {
             if (fadeOut) StartCoroutine(FadeOut());
             else SceneManager.LoadScene(nextSceneName);
+        } else {
+            if (fadeIn) StartCoroutine(FadeIn());
         }
+    }
+    
+    IEnumerator FadeIn() {
+        Color c = blackImage.color;
+        for (float alpha = 1f; alpha >= 0f; alpha -= 0.03f) {
+            c.a = alpha < 0 ? 0 : alpha;
+            blackImage.color = c;
+            yield return null;
+        }
+        fadeIn = false;
     }
 
     IEnumerator FadeOut() {

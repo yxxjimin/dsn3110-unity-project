@@ -45,7 +45,6 @@ public class TutorialState : State {
                     isBalanced = true;
                     startTask = false;
                 }
-                Debug.Log(balancedTime);
             }
         }
 

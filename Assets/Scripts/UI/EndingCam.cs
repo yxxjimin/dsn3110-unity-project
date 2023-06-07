@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class EndingCam : MonoBehaviour {
     [SerializeField] private CutSceneDialogue dialogue;
@@ -30,7 +31,7 @@ public class EndingCam : MonoBehaviour {
         if (dialogue.dialogueFinished) {
             if (walkTime > 0) walkTime -= Time.deltaTime;
             else if (!coroutineStarted) {
-                walkTime = 2f;
+                walkTime = 4f;
                 StartCoroutine(RotateCamera());
             } else if (!fadeStarted) {
                 StopAllCoroutines();
@@ -45,7 +46,7 @@ public class EndingCam : MonoBehaviour {
     IEnumerator RotateCamera() {
         coroutineStarted = true;
         Quaternion rot = transform.rotation;
-        for (float angle = 0f; angle >= -10f; angle -= 0.0002f) {
+        for (float angle = 0f; angle >= -10f; angle -= 0.0003f) {
             rot.x = angle;
             transform.rotation = rot;
             yield return null;
@@ -55,10 +56,11 @@ public class EndingCam : MonoBehaviour {
     IEnumerator FadeOut() {
         fadeStarted = true;
         Color c = blackImage.color;
-        for (float alpha = 0f; alpha <= 1f; alpha += 0.03f) {
+        for (float alpha = 0f; alpha <= 1f; alpha += 0.02f) {
             c.a = alpha > 1 ? 1 : alpha;
             blackImage.color = c;
             yield return null;
         }
+        SceneManager.LoadScene("Opening");
     }
 }
