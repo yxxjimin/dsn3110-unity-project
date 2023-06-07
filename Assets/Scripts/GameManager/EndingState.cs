@@ -8,6 +8,7 @@ public class EndingState : State {
     [SerializeField] private GameObject player;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private CutSceneDialogue dialogue;
+    [SerializeField] private string nextSceneName;
 
     public override void Enter() {
         startTimer = 3f;
@@ -29,6 +30,6 @@ public class EndingState : State {
     }
 
     public override void Exit() {
-
+        SceneManager.LoadScene(nextSceneName);
     }
 }

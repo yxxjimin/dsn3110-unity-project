@@ -23,11 +23,13 @@ public class SecondStageState : State {
         gameManager.fishRatio = 0.5f;
         gameManager.superFishRatio =  0.2f;
 
+        dialogue.gameObject.SetActive(false);
+
         Debug.Log("SECOND_STAGE: Starting Stage 2");
     }
 
     public override void Tick() {
-        if (dialogue.dialogueFinished) {
+        if (player.transform.position.z <= 100f && !dialogue.dialogueFinished) {
             // Starting timer
             if (startTimer > 0) startTimer -= Time.deltaTime;
             else playerScript.movePermitted = true;
@@ -35,6 +37,19 @@ public class SecondStageState : State {
             // Game length timer
             if (playerScript.movePermitted && endTimer > 0) endTimer -= Time.deltaTime;
             else if (endTimer <= 0) isFinished = true;
+        }
+
+        // Show dialogue
+        else if (player.transform.position.z > 100f && !dialogue.dialogueFinished) {
+            dialogue.gameObject.SetActive(true);
+
+            playerScript.movePermitted = false;
+        }
+
+        else if (dialogue.dialogueFinished) {
+            playerScript.movePermitted = true;
+            endTimer -= Time.deltaTime;
+            if (endTimer <= 0) isFinished = true;
         }
         
         // Finish line

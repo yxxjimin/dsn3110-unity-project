@@ -16,7 +16,14 @@ public class CountDown : MonoBehaviour {
     }
 
     void Update() {
-        if (dialogue.dialogueFinished) {
+        if (dialogue != null && dialogue.dialogueFinished) {
+            if (stage.startTimer > 2) ChangeSprite(0);
+            else if (stage.startTimer > 1) ChangeSprite(1);
+            else if (stage.startTimer > 0) ChangeSprite(2);
+            else this.gameObject.SetActive(false);
+        }
+
+        if (dialogue == null) {
             if (stage.startTimer > 2) ChangeSprite(0);
             else if (stage.startTimer > 1) ChangeSprite(1);
             else if (stage.startTimer > 0) ChangeSprite(2);

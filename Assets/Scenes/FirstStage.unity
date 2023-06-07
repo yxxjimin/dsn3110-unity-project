@@ -4465,7 +4465,7 @@ MonoBehaviour:
   startTimer: 3
   player: {fileID: 1514662604}
   gameManager: {fileID: 1121100567}
-  nextSceneName: SecondStage
+  nextSceneName: MiddleCut
   dialogue: {fileID: 414107812}
 --- !u!4 &122193787
 Transform:

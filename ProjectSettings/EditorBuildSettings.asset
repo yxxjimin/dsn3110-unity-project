@@ -21,6 +21,9 @@ EditorBuildSettings:
     path: Assets/Scenes/FirstStage.unity
     guid: 723a6d6f4ca224696858252af8b10eee
   - enabled: 1
+    path: Assets/Scenes/MiddleCut.unity
+    guid: f10cf8a34257a4eef892299e5f12f4fa
+  - enabled: 1
     path: Assets/Scenes/SecondStage.unity
     guid: 3131fb24ed9924caf89e4983c9f06ae9
   - enabled: 1
@@ -29,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ZzapEnding.unity
     guid: 464d12535512f460889fcf2f3a98774a
+  - enabled: 1
+    path: Assets/Scenes/ZzapEndingCut.unity
+    guid: db1bf813a76e84d898f8ba988e879748
   m_configObjects: {}

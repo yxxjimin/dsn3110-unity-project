@@ -22825,6 +22825,7 @@ MonoBehaviour:
   player: {fileID: 1698476194}
   gameManager: {fileID: 434327357}
   dialogue: {fileID: 1547846719}
+  nextSceneName: ZzapEndingCut
 --- !u!4 &608575595
 Transform:
   m_ObjectHideFlags: 0
