@@ -40,11 +40,12 @@ public class TutorialState : State {
             if (startTask) {
                 if (player.timeOffBoard <= 0.5f) balancedTime += Time.deltaTime;
                 else balancedTime = 0;
-            }
-            
-            if (balancedTime > 7f) {
-                isBalanced = true;
-                startTask = false;
+
+                if (balancedTime > 5f) {
+                    isBalanced = true;
+                    startTask = false;
+                }
+                Debug.Log(balancedTime);
             }
         }
 
