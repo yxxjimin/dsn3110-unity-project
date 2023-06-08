@@ -9,8 +9,12 @@ public class EndingState : State {
     [SerializeField] private GameManager gameManager;
     [SerializeField] private CutSceneDialogue dialogue;
     [SerializeField] private string nextSceneName;
+    [SerializeField] public AudioClip bgMusic;
 
     public override void Enter() {
+        DataManager.instance.GetComponent<AudioSource>().Stop();
+        DataManager.instance.GetComponent<AudioSource>().clip = bgMusic;
+        DataManager.instance.GetComponent<AudioSource>().Play();
         startTimer = 3f;
 
         playerScript = player.GetComponent<PlayerController>();

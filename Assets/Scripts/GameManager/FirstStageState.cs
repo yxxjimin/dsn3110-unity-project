@@ -11,6 +11,8 @@ public class FirstStageState : State {
 
     [SerializeField] private CutSceneDialogue dialogue;
     private float endTimer = 45f;
+    private bool audioPlayed = false;
+    [SerializeField] public AudioClip bgMusic;
 
     public override void Enter() {
         startTimer = 3f;
@@ -22,6 +24,8 @@ public class FirstStageState : State {
 
         DataManager.instance.itemInfoDict["Fish"] = 0;
         DataManager.instance.itemInfoDict["Bomb"] = 0;
+        DataManager.instance.GetComponent<AudioSource>().clip = bgMusic;
+        DataManager.instance.GetComponent<AudioSource>().Play();
 
         gameManager.fishRatio = 0.5f;
         gameManager.superFishRatio =  0.2f;
@@ -31,6 +35,10 @@ public class FirstStageState : State {
 
     public override void Tick() {
         if (dialogue.dialogueFinished) {
+            if (!audioPlayed) {
+                GetComponent<AudioSource>().Play();
+                audioPlayed = true;
+            }
             // Starting timer
             if (startTimer > 0) startTimer -= Time.deltaTime;
             else playerScript.movePermitted = true;

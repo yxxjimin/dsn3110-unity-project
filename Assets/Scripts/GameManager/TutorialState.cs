@@ -85,6 +85,7 @@ public class TutorialState : State {
         Debug.Log("TUTORIAL: Moving to next state");
         player.gameObject.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
+        DataManager.instance.GetComponent<AudioSource>().Stop();
         SceneManager.LoadScene(nextSceneName);
     }
 }

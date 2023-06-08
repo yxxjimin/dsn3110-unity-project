@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class EndingCam : MonoBehaviour {
     [SerializeField] private CutSceneDialogue dialogue;
     [SerializeField] Image blackImage;
+    [SerializeField] private AudioClip bgMusic;
     private float walkTime = 3f;
     public PlayerController player;
     private Vector3 playerPosition;
@@ -25,6 +26,9 @@ public class EndingCam : MonoBehaviour {
 
         coroutineStarted = false;
         fadeStarted = false;
+
+        DataManager.instance.GetComponent<AudioSource>().clip = bgMusic;
+        DataManager.instance.GetComponent<AudioSource>().Play();
     }
 
     void Update() {

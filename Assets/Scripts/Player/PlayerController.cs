@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour {
             case "Bomb": DataManager.instance.itemInfoDict["Bomb"] += 1; break;
             default: break;
         }
-
+        
         item.gameObject.SetActive(false);
     }
 

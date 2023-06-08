@@ -10,6 +10,7 @@ public class OpeningScene : MonoBehaviour {
     [SerializeField] private ControllerManager controller;
     [SerializeField] private int framePerBlink = 10;
     [SerializeField] private Image blackImage;
+    [SerializeField] public AudioClip bgMusic;
     private int frameCount;
     private bool blink;
     public SerialPort joystick;
@@ -21,6 +22,8 @@ public class OpeningScene : MonoBehaviour {
 
         StartCoroutine(FadeIn());
         joystick = controller.joystick;
+        DataManager.instance.GetComponent<AudioSource>().clip = bgMusic;
+        DataManager.instance.GetComponent<AudioSource>().Play();
     }
 
     void FixedUpdate() {
