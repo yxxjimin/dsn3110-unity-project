@@ -20,7 +20,7 @@ public class TutorialSprite : MonoBehaviour {
     private Dictionary<Sprite, bool> displayHistory;
     private bool finishedCoroutine;
     private SerialPort joystick;
-    private bool fadeIn, fadeOut;
+    private bool fadeOut;
 
     void Start() {
         currentImage = GetComponent<Image>();
@@ -37,7 +37,7 @@ public class TutorialSprite : MonoBehaviour {
 
         joystick = controller.joystick;
 
-        fadeIn = true;
+        StartCoroutine(FadeIn());
         fadeOut = true;
     }
 
@@ -75,7 +75,10 @@ public class TutorialSprite : MonoBehaviour {
 
         if (tutorialStage.isItemConsumed) {
             tutorialEndDialogue.gameObject.SetActive(true);
-            if (tutorialEndDialogue.dialogueFinished) {
+            if (tutorialEndDialogue.dialogueFinished && fadeOut) {
+                StartCoroutine(FadeOut());
+                // tutorialStage.isFinished = true;
+            } else if (!fadeOut) {
                 tutorialStage.isFinished = true;
             }
         }
@@ -89,7 +92,7 @@ public class TutorialSprite : MonoBehaviour {
             img.color = c;
             yield return null;
         }
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 100; i++) {
             yield return null;
         }
         for (float alpha = fadeTime; alpha >= 0; alpha -= 0.2f) {
@@ -107,7 +110,6 @@ public class TutorialSprite : MonoBehaviour {
             currentImage.color = c;
             yield return null;
         }
-        fadeIn = false;
     }
 
     IEnumerator FadeOut() {

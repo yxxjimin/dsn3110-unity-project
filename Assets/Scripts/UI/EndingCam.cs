@@ -29,6 +29,8 @@ public class EndingCam : MonoBehaviour {
 
         DataManager.instance.GetComponent<AudioSource>().clip = bgMusic;
         DataManager.instance.GetComponent<AudioSource>().Play();
+
+        StartCoroutine(FadeIn());
     }
 
     void Update() {
@@ -66,5 +68,14 @@ public class EndingCam : MonoBehaviour {
             yield return null;
         }
         SceneManager.LoadScene("Opening");
+    }
+
+    IEnumerator FadeIn() {
+        Color c = blackImage.color;
+        for (float alpha = 1f; alpha >= 0f; alpha -= 0.03f) {
+            c.a = alpha < 0 ? 0 : alpha;
+            blackImage.color = c;
+            yield return null;
+        }
     }
 }

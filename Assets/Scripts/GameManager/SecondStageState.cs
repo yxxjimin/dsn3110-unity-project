@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class SecondStageState : State {
@@ -9,6 +10,8 @@ public class SecondStageState : State {
     [SerializeField] private GameManager gameManager;
     [SerializeField] private string nextSceneName;
     [SerializeField] private CutSceneDialogue dialogue;
+    [SerializeField] Image blackImage;
+    private bool fadeOut;
     private float endTimer = 45f;
 
     public override void Enter() {
@@ -26,6 +29,9 @@ public class SecondStageState : State {
         dialogue.gameObject.SetActive(false);
 
         Debug.Log("SECOND_STAGE: Starting Stage 2");
+
+        StartCoroutine(FadeIn());
+        fadeOut = true;
     }
 
     public override void Tick() {
@@ -36,7 +42,12 @@ public class SecondStageState : State {
 
             // Game length timer
             if (playerScript.movePermitted && endTimer > 0) endTimer -= Time.deltaTime;
-            else if (endTimer <= 0) isFinished = true;
+            else if (endTimer <= 0 && fadeOut) {
+                // isFinished = true;
+                StartCoroutine(FadeOut());
+            } else if (!fadeOut) {
+                isFinished = true;
+            }
         }
 
         // Show dialogue
@@ -72,5 +83,24 @@ public class SecondStageState : State {
             nextSceneName = "JinEnding";
         }
         SceneManager.LoadScene(nextSceneName);
+    }
+
+    IEnumerator FadeIn() {
+        Color c = blackImage.color;
+        for (float alpha = 1f; alpha >= 0f; alpha -= 0.03f) {
+            c.a = alpha < 0 ? 0 : alpha;
+            blackImage.color = c;
+            yield return null;
+        }
+    }
+
+    IEnumerator FadeOut() {
+        Color c = blackImage.color;
+        for (float alpha = 0f; alpha <= 1f; alpha += 0.03f) {
+            c.a = alpha > 1 ? 1 : alpha;
+            blackImage.color = c;
+            yield return null;
+        }
+        fadeOut = false;
     }
 }

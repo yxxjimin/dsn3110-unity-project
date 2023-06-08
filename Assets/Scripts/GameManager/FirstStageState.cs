@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class FirstStageState : State {
@@ -8,7 +9,8 @@ public class FirstStageState : State {
     [SerializeField] private GameObject player;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private string nextSceneName;
-
+    [SerializeField] Image blackImage;
+    private bool fadeOut;
     [SerializeField] private CutSceneDialogue dialogue;
     private float endTimer = 45f;
     private bool audioPlayed = false;
@@ -31,6 +33,9 @@ public class FirstStageState : State {
         gameManager.superFishRatio =  0.2f;
 
         Debug.Log("FIRST_STAGE: Starting Stage 1");
+
+        StartCoroutine(FadeIn());
+        fadeOut = true;
     }
 
     public override void Tick() {
@@ -45,7 +50,12 @@ public class FirstStageState : State {
 
             // Game length timer
             if (playerScript.movePermitted && endTimer > 0) endTimer -= Time.deltaTime;
-            else if (endTimer <= 0) isFinished = true;
+            else if (endTimer <= 0 && fadeOut) {
+                // isFinished = true;
+                StartCoroutine(FadeOut());
+            } else if (!fadeOut) {
+                isFinished = true;
+            }
         }
         
         // Finish line
@@ -63,5 +73,24 @@ public class FirstStageState : State {
         player.SetActive(false);
         gameManager.mapGeneratorObject.SetActive(false);
         SceneManager.LoadScene(nextSceneName);
+    }
+
+    IEnumerator FadeIn() {
+        Color c = blackImage.color;
+        for (float alpha = 1f; alpha >= 0f; alpha -= 0.03f) {
+            c.a = alpha < 0 ? 0 : alpha;
+            blackImage.color = c;
+            yield return null;
+        }
+    }
+
+    IEnumerator FadeOut() {
+        Color c = blackImage.color;
+        for (float alpha = 0f; alpha <= 1f; alpha += 0.03f) {
+            c.a = alpha > 1 ? 1 : alpha;
+            blackImage.color = c;
+            yield return null;
+        }
+        fadeOut = false;
     }
 }
